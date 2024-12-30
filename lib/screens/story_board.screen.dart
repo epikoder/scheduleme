@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:scheduleme/components/logo.dart';
 import 'package:scheduleme/components/parallex_slide.dart';
 import 'package:scheduleme/components/translate.dart';
+import 'package:scheduleme/core/screen.dart';
 import 'package:scheduleme/services/navigation.service.dart';
 import 'package:scheduleme/utils/assets.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -17,8 +19,10 @@ class StoryBoardScreenState extends State<StoryBoardScreen> {
   Widget build(BuildContext context) {
     return const PopScope(
       canPop: false,
-      child: ParallexSlide(
-        pages: [Story1(), Story2()],
+      child: CoreScreen(
+        child: ParallexSlide(
+          pages: [Story1(), Story2()],
+        ),
       ),
     );
   }
@@ -33,10 +37,7 @@ class Story1 extends StatelessWidget {
       Translate(
         duration: const Duration(seconds: 2),
         end: const Offset(0, -70),
-        child: Image.asset(
-          Assets.logo,
-          height: 170,
-        ).center(),
+        child: const Logo().center(),
       ),
       Translate(
         duration: const Duration(seconds: 2),
@@ -75,11 +76,9 @@ class Story2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return <Widget>[
-      [
-        Styled.text("Don't miss an appointment ever again.")
+      Styled.text("Don't miss an appointment ever again.")
             .textColor(Colors.black)
-            .fontSize(18)
-      ].toRow(),
+            .fontSize(18),
       [
         Styled.text("Your \nSchedule")
             .textColor(Colors.black)
@@ -89,16 +88,15 @@ class Story2 extends StatelessWidget {
       Image.asset(Assets.calender),
       [
         Styled.text("Sun, 09 Jyly").textColor(Colors.black),
-        Styled.text("09").fontSize(90).textColor(Colors.orange.shade800),
+        Styled.text("09").fontSize(80).textColor(Colors.orange.shade800),
       ].toRow(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween),
       [
-        Image.asset(
-          Assets.logo,
-          height: 50,
-        ),
-        Styled.text("25").fontSize(90).textColor(Colors.orange.shade800),
+        const Logo(
+          size: 50,
+        ).center(),
+        Styled.text("25").fontSize(80).textColor(Colors.orange.shade800),
       ].toRow(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween),

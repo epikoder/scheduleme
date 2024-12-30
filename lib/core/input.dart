@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scheduleme/core/core_widget.dart';
-import 'package:scheduleme/theme.dart';
 import 'package:styled_widget/styled_widget.dart';
 
 class CoreInput extends CoreStatelessWidget {
@@ -9,19 +8,24 @@ class CoreInput extends CoreStatelessWidget {
     super.key,
     required this.label,
     this.placeholder,
+    this.obscure,
   });
 
   final Widget label;
   final String? placeholder;
+  final bool? obscure;
 
   @override
   Widget createAndroidWidget(BuildContext context) => TextFormField(
         decoration: InputDecoration(
           border: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.white54),
-              borderRadius: BorderRadius.circular(10)),
+            borderSide: const BorderSide(color: Colors.white54),
+            borderRadius: BorderRadius.circular(30),
+          ),
           label: label,
+          // isDense: true,
         ),
+        style: const TextStyle(fontSize: 14),
       );
 
   @override
