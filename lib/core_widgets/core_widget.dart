@@ -25,10 +25,9 @@ abstract class CoreStatefulWidget<PS extends CoreWidgetState>
   PS createState();
 }
 
-abstract class CoreWidgetState<I extends StatefulWidget,
-    A extends StatefulWidget> extends State<I> {
-  I createIosWidget(BuildContext context);
-  A createAndroidWidget(BuildContext context);
+abstract class CoreWidgetState<W extends StatefulWidget> extends State<W> {
+  Widget createIosWidget(BuildContext context);
+  Widget createAndroidWidget(BuildContext context);
 
   @override
   Widget build(BuildContext context) => switch (Platform.isIOS) {

@@ -1,19 +1,37 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:scheduleme/screens/appointment/create/screen.dart';
+import 'package:scheduleme/screens/appointment/view/screen.dart';
+import 'package:scheduleme/screens/dashboard/screen.dart';
 import 'package:scheduleme/screens/login_screen.dart';
+import 'package:scheduleme/screens/onboarding/organisation_setup_screen.dart';
+import 'package:scheduleme/screens/register_screen.dart';
+import 'package:scheduleme/screens/spaces/manage/customize_appointment.dart';
 import 'package:scheduleme/screens/splash.screen.dart';
 import 'package:scheduleme/screens/story_board.screen.dart';
 
 abstract class NavigationService {
   static final navigationKey = GlobalKey<NavigatorState>();
-  static Map<String, Widget Function(BuildContext)> routes = {
-    "/splash-screen": (context) => const SplashScreen(),
-    "/login": (context) => const LoginScreen(),
-  };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) =>
       switch (settings.name) {
-        Navigator.defaultRouteName =>
-          FadeTransitionRoute(page: const StoryBoardScreen()),
+        "/splash-screen" =>
+          CupertinoPageRoute(builder: (context) => const SplashScreen()),
+        "/login" =>
+          CupertinoPageRoute(builder: (context) => const LoginScreen()),
+        "/register" =>
+          CupertinoPageRoute(builder: (context) => const RegisterScreen()),
+
+        // authenticated routes
+        "/onboarding/organisation" =>
+          CupertinoPageRoute(builder: (_) => const OrganisationSetupScreen()),
+        "/dashboard" =>
+          CupertinoPageRoute(builder: (context) => DashboardScreen()),
+        "/appointments/view" =>
+          CupertinoPageRoute(builder: (_) => const AppointmentScreen()),
+        "/appointments/create" =>
+          CupertinoPageRoute(builder: (_) => CreateAppointment()),
+        "/spaces/manage/customize_appointment" =>
+          CupertinoPageRoute(builder: (_) => const CustomizeAppointment()),
         "/story-board" => FadeTransitionRoute(page: const StoryBoardScreen()),
         _ => null,
       };

@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:scheduleme/components/fragment.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class SettingScreen extends Fragment {
-  const SettingScreen({super.key});
+class ProfileScreen extends Fragment {
+  const ProfileScreen({super.key});
 
   @override
   Widget createAndroidWidget(BuildContext context) {
-    return [
-      
-      Styled.text("Settings"),
-    ].toColumn().scrollable().padding(horizontal: 10);
+    return <Widget>[Styled.text("Profilecreen")].toColumn();
   }
 
   @override
   Widget createIosWidget(BuildContext context) {
-    return createAndroidWidget(context);
+    // TODO: implement createIosWidget
+    throw UnimplementedError();
   }
 }

@@ -12,6 +12,6 @@ class Logo extends StatelessWidget {
       Assets.logo,
       height: size,
       width: size,
-    ).backgroundColor(Colors.black).clipOval();
+    ).padding(all: .5).backgroundColor(Colors.black).clipOval();
   }
 }

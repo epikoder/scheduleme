@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduleme/core/core_widget.dart';
+import 'package:scheduleme/core_widgets/core_widget.dart';
 
 class CoreTheme extends CoreStatelessWidget {
   const CoreTheme({

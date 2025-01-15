@@ -6,11 +6,11 @@ part of 'auth.notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$checkAuthHash() => r'b0dd7ec5b9848d0ea33d19d89640c011e9a362cd';
+String _$checkAuthHash() => r'67a95c4a4cfa40cca4973fbaba9ed3ecc6ec8622';
 
 /// See also [checkAuth].
 @ProviderFor(checkAuth)
-final checkAuthProvider = AutoDisposeFutureProvider<dynamic>.internal(
+final checkAuthProvider = AutoDisposeFutureProvider<User?>.internal(
   checkAuth,
   name: r'checkAuthProvider',
   debugGetCreateSourceHash:
@@ -21,21 +21,6 @@ final checkAuthProvider = AutoDisposeFutureProvider<dynamic>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef CheckAuthRef = AutoDisposeFutureProviderRef<dynamic>;
-String _$authNotifierHash() => r'a37dac724f97afa759ec1e5093256cce8868f0a3';
-
-/// See also [AuthNotifier].
-@ProviderFor(AuthNotifier)
-final authNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<AuthNotifier, dynamic>.internal(
-  AuthNotifier.new,
-  name: r'authNotifierProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$authNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$AuthNotifier = AutoDisposeAsyncNotifier<dynamic>;
+typedef CheckAuthRef = AutoDisposeFutureProviderRef<User?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

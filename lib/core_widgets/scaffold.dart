@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduleme/core/core_widget.dart';
+import 'package:scheduleme/core_widgets/core_widget.dart';
 
 class CoreScaffold extends CoreStatelessWidget {
   const CoreScaffold({
@@ -29,6 +29,7 @@ class CoreScaffold extends CoreStatelessWidget {
     this.extendBodyBehindAppBar = false,
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
+    this.scaffoldKey,
   });
 
   final ObstructingPreferredSizeWidget? navigationBar;
@@ -58,12 +59,36 @@ class CoreScaffold extends CoreStatelessWidget {
   final bool endDrawerEnableOpenDragGesture;
   final String? restorationId;
   final Widget body;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   Widget createAndroidWidget(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      drawer: drawer,
       backgroundColor: backgroundColor,
+      appBar: appBar,
       body: body,
+      bottomNavigationBar: bottomNavigationBar,
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonAnimator: floatingActionButtonAnimator,
+      floatingActionButtonLocation: floatingActionButtonLocation,
+      bottomSheet: bottomSheet,
+      drawerDragStartBehavior: drawerDragStartBehavior,
+      drawerEdgeDragWidth: drawerEdgeDragWidth,
+      drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+      drawerScrimColor: drawerScrimColor,
+      endDrawer: endDrawer,
+      endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
+      extendBody: extendBody,
+      extendBodyBehindAppBar: extendBodyBehindAppBar,
+      onDrawerChanged: onDrawerChanged,
+      onEndDrawerChanged: onEndDrawerChanged,
+      persistentFooterAlignment: persistentFooterAlignment,
+      persistentFooterButtons: persistentFooterButtons,
+      primary: primary,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      restorationId: restorationId,
     );
   }
 
