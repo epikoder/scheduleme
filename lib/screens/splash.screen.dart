@@ -3,7 +3,6 @@ import 'package:scheduleme/components/logo.dart';
 import 'package:scheduleme/core_widgets/screen.dart';
 import 'package:scheduleme/services/navigation.service.dart';
 import 'package:styled_widget/styled_widget.dart';
-import 'package:scheduleme/utils/assets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scheduleme/components/form_builder/checkbox_input.dart';
+import 'package:scheduleme/components/form_builder/dropdown_input.dart';
 import 'package:scheduleme/components/form_builder/field_input.dart';
 import 'package:scheduleme/components/form_builder/text_input.dart';
 import 'package:styled_widget/styled_widget.dart';
@@ -7,7 +9,9 @@ List<FieldInput> formFromJson(List<Map<String, dynamic>> jsonMap) {
   return jsonMap
       .map((entry) =>
           switch (FieldType.fromString(entry["field_type"] as String)) {
-            FieldType.text => TextInput.fromJson(entry),
+            FieldType.dropDown => DropdownInput.fromJson(entry),
+            FieldType.checkBox => CheckboxInput.fromJson(entry),
+            _ => TextInput.fromJson(entry),
           })
       .toList();
 }

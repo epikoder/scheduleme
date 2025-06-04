@@ -119,6 +119,7 @@ class Story2 extends StatelessWidget {
         .scrollable()
         .padding(
           horizontal: 50,
+          vertical: 20,
         )
         .height(MediaQuery.of(context).size.height)
         .width(MediaQuery.of(context).size.width)

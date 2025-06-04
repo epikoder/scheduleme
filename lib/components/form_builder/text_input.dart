@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:scheduleme/components/form_builder/field_input.dart';
 import 'package:scheduleme/components/form_builder/form_builder.dart';
 import 'package:scheduleme/core_widgets/input.dart';
+import 'package:scheduleme/utils/validator.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-enum MyTextInputType {
+enum FormTextInputType {
   emailAddress,
   password,
   text,
@@ -16,7 +17,8 @@ class TextFieldInputType {
     this.min,
     this.max,
   });
-  final MyTextInputType inputType;
+
+  final FormTextInputType inputType;
   final int? min;
   final int? max;
 
@@ -24,10 +26,10 @@ class TextFieldInputType {
     final ipt = jsonMap["input_type"] as String?;
     return TextFieldInputType(
       switch (ipt) {
-        "emailAddress" => MyTextInputType.emailAddress,
-        "password" => MyTextInputType.password,
-        String() => MyTextInputType.text,
-        null => MyTextInputType.text,
+        "emailAddress" => FormTextInputType.emailAddress,
+        "password" => FormTextInputType.password,
+        String() => FormTextInputType.text,
+        null => FormTextInputType.text,
       },
       min: jsonMap["input_type:min"] as int?,
       max: jsonMap["input_type:max"] as int?,
@@ -35,10 +37,14 @@ class TextFieldInputType {
   }
 
   String? Function(String?)? validator() => switch (inputType) {
-        MyTextInputType.emailAddress => (text) {
-            return text == null || text.isEmpty ? "email is invalud" : null;
+        FormTextInputType.emailAddress => (text) {
+            return text == null || text.isEmpty
+                ? "field is required"
+                : !isEmailValid(text)
+                    ? "email is invalid"
+                    : null;
           },
-        MyTextInputType() => null,
+        FormTextInputType() => null,
       };
 }
 
@@ -57,6 +63,7 @@ class TextInput extends FieldInput {
         text: jsonMap["title"]["text"],
         isRequired: isRequired,
       )
+      ..isEnabled = jsonMap["is_enabled"] ?? true
       ..fieldInputType = TextFieldInputType.fromString(jsonMap)
       ..controller = TextEditingController(text: jsonMap["default_value"]);
   }
@@ -64,7 +71,7 @@ class TextInput extends FieldInput {
   @override
   Map<String, dynamic> toJson() {
     return {
-      "formType": formType.asString,
+      "field_type": fieldType.string,
     };
   }
 
@@ -74,6 +81,7 @@ class TextInput extends FieldInput {
     provider.controllers[name] = controller;
     return CoreInput(
       isDense: true,
+      textArea: fieldType == FieldType.textArea,
       controller: controller,
       placeholder: placeholder,
       label: title.isRequired
@@ -84,7 +92,7 @@ class TextInput extends FieldInput {
             )
           : Styled.text(title.text),
       validator: fieldInputType.validator(),
-      obscureText: fieldInputType.inputType == MyTextInputType.password,
+      obscureText: fieldInputType.inputType == FormTextInputType.password,
     );
   }
 }

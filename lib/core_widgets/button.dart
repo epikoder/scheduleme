@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scheduleme/core_widgets/core_widget.dart';
 
@@ -23,6 +22,6 @@ class CoreButton extends CoreStatelessWidget {
 
   @override
   Widget createIosWidget(BuildContext context) {
-    return CupertinoButton.filled(onPressed: onPressed, child: child);
+    return createAndroidWidget(context);
   }
 }

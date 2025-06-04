@@ -15,6 +15,6 @@ class CoreScreen extends CoreStatelessWidget {
 
   @override
   Widget createIosWidget(BuildContext context) {
-    return child;
+    return createAndroidWidget(context);
   }
 }

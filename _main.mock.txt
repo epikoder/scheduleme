@@ -1,0 +1,460 @@
+part of '_main.mock';
+
+const estateSpaceId = "5f52c805df41c9df948e6134";
+const organisationSpaceID = "5f52c805df41c9df948e6135";
+
+const estateRecord = {};
+const organisationRecord = {};
+
+void mockRegister() {
+  Client.instance.registerMock(
+    ApiURL.signup.pathOnly,
+    HttpMethod.post,
+    (request) async {
+      logger.d(
+        "Got request ${request.url.path} ${request.body}",
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      final credentials = jsonDecode(request.body);
+      if (!isEmailValid(credentials["email"])) {
+        return Future.value(
+          http.Response(
+              jsonEncode({
+                "status": "failed",
+                "error": {
+                  "message": "BadRequest:invalid_email",
+                  "code": 4001,
+                }
+              }),
+              200),
+        );
+      }
+
+      if (!isPasswordValid(credentials["password"])) {
+        return Future.value(
+          http.Response(
+              jsonEncode({
+                "status": "failed",
+                "error": {
+                  "message": "BadRequest:invalid_password",
+                  "code": 4002,
+                }
+              }),
+              200),
+        );
+      }
+
+      return Future.value(
+          http.Response(jsonEncode({"status": "success", "data": {}}), 200));
+    },
+  );
+
+  Client.instance.registerMock(
+    ApiURL.login.pathOnly,
+    HttpMethod.get,
+    (request) async {
+      await Future.delayed(const Duration(seconds: 1));
+      final email = request.url.queryParameters["email"];
+      if (email == null || email.isEmpty || !email.contains("@")) {
+        return Future.value(http.Response(
+            jsonEncode({"status": "success", "data": "none"}), 200));
+      }
+      if (email.split("@")[1] == "google") {
+        return Future.value(http.Response(
+            jsonEncode({"status": "success", "data": "Google"}), 200));
+      }
+
+      return Future.value(http.Response(
+          jsonEncode({"status": "success", "data": "Credentials"}), 200));
+    },
+  );
+}
+
+void mockLogin() {
+  Client.instance.registerMock(
+    ApiURL.login.pathOnly,
+    HttpMethod.post,
+    (request) async {
+      logger.d(
+        "Got request ${request.url.path} ${request.body}",
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      final credentials = jsonDecode(request.body);
+      if (credentials["password"] != "password") {
+        return Future.value(http.Response(
+            jsonEncode({
+              "status": "failed",
+              "error": {
+                "message": "Invalid username or password",
+                "code": 4003,
+              }
+            }),
+            200));
+      }
+
+      if (credentials["email"] != "acme@gmail.com") {
+        return Future.value(
+          http.Response(
+              jsonEncode({
+                "status": "success",
+                "data": {
+                  "email": credentials["email"],
+                  "code": 2001, // email verification required
+                }
+              }),
+              200),
+        );
+      }
+
+      if (credentials["email"] == "setup@gmail.com") {
+        return Future.value(
+          http.Response(
+              jsonEncode({
+                "status": "success",
+                "data": {
+                  "code": 2002, // account setup required
+                }
+              }),
+              200),
+        );
+      }
+
+      return Future.value(http.Response(
+          jsonEncode({
+            "status": "success",
+            "data": {
+              "user": {
+                "email": credentials["email"],
+                "providers": ["credentials", "google"],
+                "meta_data": {
+                  "full_name": "Acme Doe",
+                  "phone": {"code": 234, "phone": "9052222222"},
+                  "photo": "/avatar.png",
+                },
+                "profiles": [
+                  {
+                    "profile_type": "organisation",
+                    "photo": "/avatar1.png",
+                    "space_id": "space_id_2"
+                  },
+                  {
+                    "full_name": "John Wick",
+                    "profile_type": "estate",
+                    "phone": {"code": 234, "phone": "9052255555"},
+                    "photo": "/avatar2.png",
+                    "space_id": "space_id_2"
+                  },
+                ]
+              },
+              "tokens": {"access_token": "ey....", "refresh_token": "ey...."}
+            }
+          }),
+          200));
+    },
+  );
+}
+
+void mockEmailVerification() {
+  Client.instance.registerMock(
+    ApiURL.emailVerification.pathOnly,
+    HttpMethod.get,
+    (request) async {
+      await Future.delayed(const Duration(seconds: 1));
+      final credentials = request.url.queryParameters;
+      if (credentials["email"] == "") {
+        return Future.value(http.Response(
+            jsonEncode({
+              "status": "failed",
+              "error": {
+                "code": 400,
+              }
+            }),
+            200));
+      }
+
+      if (credentials["email"] != "setup@gmail.com") {
+        return Future.value(
+          http.Response(
+              jsonEncode({
+                "status": "failed",
+                "error": {
+                  "code": 429,
+                  "message": "Too many request, please wait a moment"
+                }
+              }),
+              200),
+        );
+      }
+
+      return Future.value(http.Response(
+          jsonEncode({
+            "status": "success",
+          }),
+          200));
+    },
+  );
+
+  Client.instance.registerMock(
+    ApiURL.emailVerification.pathOnly,
+    HttpMethod.post,
+    (request) async {
+      await Future.delayed(const Duration(seconds: 1));
+      final credentials = jsonDecode(request.body);
+      if (credentials["email"] == "") {
+        return Future.value(http.Response(
+            jsonEncode({
+              "status": "failed",
+              "error": {
+                "code": 400,
+              }
+            }),
+            200));
+      }
+
+      if (credentials["code"] != "00000" ||
+          credentials["email"] != "setup@gmail.com") {
+        return Future.value(
+          http.Response(
+              jsonEncode({
+                "status": "failed",
+                "error": {"code": 400, "message": "Token is incorrect"}
+              }),
+              200),
+        );
+      }
+
+      return Future.value(http.Response(
+          jsonEncode({
+            "status": "success",
+            "data": {
+              "user": {
+                "email": credentials["email"],
+                "providers": ["credentials", "google"],
+                "meta_data": {
+                  "full_name": "Acme Doe",
+                  "phone": {"code": 234, "phone": "9052222222"},
+                  "photo": "/avatar.png",
+                },
+                "profiles": [
+                  {
+                    "profile_type": "organisation",
+                    "photo": "/avatar1.png",
+                    "space_id": "space_id_2"
+                  },
+                  {
+                    "full_name": "John Wick",
+                    "profile_type": "estate",
+                    "phone": {"code": 234, "phone": "9052255555"},
+                    "photo": "/avatar2.png",
+                    "space_id": "space_id_2"
+                  },
+                ]
+              },
+              "tokens": {"access_token": "ey....", "refresh_token": "ey...."}
+            }
+          }),
+          200));
+    },
+  );
+}
+
+void mockSpaces() {
+  Client.instance.registerMock(ApiURL.spaces.pathOnly, HttpMethod.get,
+      (request) {
+    return Future.value(http.Response(
+        jsonEncode({
+          "status": "success",
+          "data": [
+            {
+              "_id": "5f52c805df41c9df948e6134",
+              "space_type": "estate",
+              "title": "Bell's Home",
+              "members": 3,
+              "is_owner": true,
+            },
+            {
+              "_id": "5f52c805df41c9df948e6135",
+              "space_type": "organisation",
+              "title": "Tnny Inc",
+              "members": 80,
+              "is_owner": false,
+            }
+          ]
+        }),
+        200));
+  });
+
+  Client.instance.registerMock(
+      ApiURL.spaceWithId("5f52c805df41c9df948e6135").pathOnly, HttpMethod.get,
+      (request) {
+    final id = request.url.pathSegments.last;
+    if (id != estateSpaceId && id != organisationSpaceID) {
+      return Future.value(http.Response(
+          jsonEncode({
+            "status": "success",
+            "error": {
+              "code": 404,
+              "message": "NotFound",
+            }
+          }),
+          200));
+    }
+
+    final estateSpace = {
+      "_id": estateSpaceId,
+      "space_type": "estate",
+      "title": "Bell's Home",
+      "members": [
+        {
+          "_id": "owner_id",
+          "role": "owner",
+        },
+        {
+          "_id": "member_id_2",
+          "role": "member",
+        },
+        {
+          "_id": "member_id_3",
+          "role": "gate_security",
+        },
+      ],
+      "roles": {
+        "owner": [],
+        "admin": [],
+        "gate_security": [
+          "members:write",
+          "members:read",
+          "appointment:confirmation",
+        ],
+      },
+      "form": {
+        "create:appointment": [
+          {
+            "name": "full_name",
+            "field_type": "text",
+            "placeholder": "Acme Joe",
+            "title": {
+              "text": "Full name",
+              "is_required": true,
+            },
+          },
+        ]
+      }
+    };
+
+    final organisationSpace = {
+      "_id": organisationSpaceID,
+      "space_type": "estate",
+      "title": "Tnny Inc",
+      "members": [
+        {
+          "_id": "owner_id",
+          "role": "owner",
+        },
+        {
+          "_id": "member_id_2",
+          "role": "member",
+        },
+        {
+          "_id": "member_id_3",
+          "role": "gate_security",
+        },
+      ],
+      "roles": {
+        "owner": [],
+        "admin": [],
+        "gate_security": [
+          "members:write",
+          "members:read",
+          "appointment:confirmation",
+        ],
+      },
+      "form": {
+        "create:appointment": [
+          {
+            "name": "full_name",
+            "field_type": "text",
+            "placeholder": "Acme Joe",
+            "title": {
+              "text": "Full name",
+              "is_required": true,
+            },
+          },
+        ]
+      }
+    };
+    return Future.value(http.Response(
+        jsonEncode({
+          "status": "success",
+          "data": id == estateSpaceId ? estateSpace : organisationSpace,
+        }),
+        200));
+  });
+}
+
+void mockAppointments() {
+  Client.instance.registerMock(
+      ApiURL.spaceAppointments(":id").pathOnly, HttpMethod.get, (request) {
+    final purpose = request.url.queryParameters["purpose"];
+    final status = request.url.queryParameters["status"];
+
+    final appointments = [
+      {
+        "_id": "5f52c805df41c9df948e6785",
+        "appointment_type": "meeting",
+        "title": "Standup Meeting",
+        "duration": 30,
+        "tag": {
+          "id": "developers-meeting",
+          "name": "Project Discussion",
+          "color": "#fff"
+        },
+        "status": "confirmed",
+        "host": {"host_id": "user_001", "host_name": "John Doe"},
+        "participants": [
+          {
+            "participant_id": "user_002",
+            "name": "Jane Smith",
+            "email": "jane@example.com"
+          },
+          {
+            "participant_id": "user_003",
+            "name": "Alex Johnson",
+            "email": "alex@example.com"
+          }
+        ],
+        "date_time":
+            DateTime.now().add(const Duration(days: 10)).toIso8601String(),
+        "location": "Conference Room A",
+        "notes": "Discuss Q2 project roadmap."
+      }
+    ];
+    return Future.value(
+        http.Response(jsonEncode({"status": "success", "data": []}), 200));
+  });
+}
+
+void ensureMockServerWhenTesting() {
+  mockRegister();
+  mockLogin();
+  mockEmailVerification();
+  mockSpaces();
+  mockAppointments();
+}
+
+final formBuilderJson = {
+  "text_input": {
+    "name": "input_name",
+    "field_type": ["text", "checkbox"],
+    "placeholder": "placeholder",
+    "title": {
+      "text": "input title",
+      "is_required": "boolean",
+    },
+    "input_type": ["phone", "email", "password"],
+  },
+};
+
+extension on String {
+  String get pathOnly => replaceFirst(ApiURL.base, "");
+}

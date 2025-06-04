@@ -8,7 +8,7 @@
 PRODUCT_NAME = scheduleme
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.wiitech.scheduleme.scheduleme
+PRODUCT_BUNDLE_IDENTIFIER = com.wiitech.scheduleme
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 com.wiitech.scheduleme. All rights reserved.

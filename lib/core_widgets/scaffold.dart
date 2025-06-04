@@ -94,9 +94,6 @@ class CoreScaffold extends CoreStatelessWidget {
 
   @override
   Widget createIosWidget(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: backgroundColor,
-      child: body,
-    );
+    return createAndroidWidget(context);
   }
 }

@@ -1,50 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scheduleme/components/app_bar.dart';
 import 'package:scheduleme/components/floating_back_button.dart';
 import 'package:scheduleme/components/form_builder/form_builder.dart';
 import 'package:scheduleme/constants/color.dart';
 import 'package:scheduleme/core_widgets/button.dart';
+import 'package:scheduleme/core_widgets/screen.dart';
+import 'package:scheduleme/screens/spaces/manage/state.dart';
 import 'package:scheduleme/services/navigation.service.dart';
 import 'package:styled_widget/styled_widget.dart';
 
-class CreateAppointment extends StatelessWidget {
-  CreateAppointment({super.key});
+class CreateAppointment extends ConsumerStatefulWidget {
+  const CreateAppointment({super.key});
 
+  @override
+  CreateAppointmentState createState() => CreateAppointmentState();
+}
+
+class CreateAppointmentState extends ConsumerState<CreateAppointment> {
   final formKey = GlobalKey<FormState>();
+  var formJson = <Map<String, dynamic>>[];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      setState(() {
+        formJson = [...AppointmentFormState.formJson];
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: <Widget>[
-        FormBuilderProvider(
+    return CoreScreen(
+      child: Scaffold(
+        appBar: appBar("Create Appointment", actions: [
+          IconButton(
+            // TODO: admin priviledge
+            onPressed: () async {
+              await Compass.push("/spaces/manage");
+              setState(() {
+                formJson = [...AppointmentFormState.formJson];
+              });
+            },
+            style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(ExtColor.buttonColor),
+              padding: WidgetStatePropertyAll(EdgeInsets.all(5)),
+              minimumSize: WidgetStatePropertyAll(Size(30, 30)),
+            ),
+            iconSize: 20,
+            icon: Styled.icon(
+              Icons.settings,
+            ),
+          )
+        ]),
+        body: FormBuilderProvider(
           child: Builder(
             builder: (context) => <Widget>[
-              Styled.text("Create Appointment").padding(vertical: 10),
               FormBuilderFromJson(
                 formKey: formKey,
-                json: const [
-                  {
-                    "name": "full_name",
-                    "field_type": "text",
-                    "placeholder": "John Doe",
-                    "title": {"text": "Full Name", "is_required": true},
-                  },
-                  {
-                    "name": "email",
-                    "field_type": "text",
-                    "placeholder": "johndoe@domain.com",
-                    "title": {"text": "Email", "is_required": true},
-                    "input_type": "emailAddress",
-                  },
-                  {
-                    "name": "phone",
-                    "field_type": "text",
-                    "placeholder": "(234) 905 2257 844",
-                    "title": {
-                      "text": "Phone",
-                    },
-                    "input_type": "phone",
-                  },
-                ],
+                json: formJson,
               ),
               CoreButton(
                 onPressed: () {
@@ -65,24 +81,7 @@ class CreateAppointment extends StatelessWidget {
                 .scrollable(),
           ),
         ),
-        const FloatingBackButton(),
-        IconButton(
-          // TODO: admin priviledge
-          onPressed: () => Compass.push("/spaces/manage/customize_appointment"),
-          style: const ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(ExtColor.buttonColor),
-            padding: WidgetStatePropertyAll(EdgeInsets.all(5)),
-            minimumSize: WidgetStatePropertyAll(Size(30, 30)),
-          ),
-          iconSize: 20,
-          icon: Styled.icon(
-            Icons.settings,
-          ),
-        ).positioned(
-          top: 15,
-          right: 10,
-        ),
-      ].toStack(),
+      ),
     );
   }
 }

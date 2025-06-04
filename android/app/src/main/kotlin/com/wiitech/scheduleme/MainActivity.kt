@@ -1,4 +1,4 @@
-package com.wiitech.scheduleme.scheduleme
+package com.wiitech.scheduleme
 
 import io.flutter.embedding.android.FlutterActivity
 

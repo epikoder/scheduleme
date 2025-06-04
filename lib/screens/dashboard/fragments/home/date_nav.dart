@@ -1,7 +1,4 @@
-import 'package:cr_calendar/cr_calendar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduleme/core_widgets/screen.dart';
 import 'package:scheduleme/services/navigation.service.dart';
 import 'package:styled_widget/styled_widget.dart';
 
@@ -47,7 +44,7 @@ class DateNav extends StatelessWidget {
           .height(40)
           .ripple()
           .clipRRect(all: 10)
-          .gestures(onTap: () => Compass.push("/appointments/view"))
+          .gestures(onTap: () => Compass.push("/appointments"))
           .positioned(right: 0, top: 0),
     ].toStack().padding(horizontal: 10);
   }

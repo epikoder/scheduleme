@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
 enum FieldType {
-  text;
+  text,
+  textArea,
+  dropDown,
+  checkBox;
 
   static FieldType fromString(String str) {
     return switch (str) {
-      "text" => FieldType.text,
-      String() => throw UnimplementedError(),
+      "textArea" => FieldType.textArea,
+      "dropDown" => FieldType.dropDown,
+      "checkBox" => FieldType.checkBox,
+      _ => FieldType.text,
     };
   }
 
-  String get asString => switch (this) {
-        FieldType.text => "text",
-      };
+  String get string => name;
 }
 
 class FieldInputTitle {
@@ -22,13 +25,13 @@ class FieldInputTitle {
 }
 
 abstract class FieldInput {
-  FieldInput(
-    this.formType,
-  );
-  late final FieldType formType;
+  FieldInput(this.fieldType);
+
+  late final FieldType fieldType;
   late final String name;
   late final String? placeholder;
   late final FieldInputTitle title;
+  late bool isEnabled;
 
   FieldInput.fromJson(dynamic jsonMap);
   Map<String, dynamic> toJson();
